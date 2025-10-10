@@ -61,24 +61,25 @@ userSchema.pre("save",  async function (next) {
 // middleware to compare the password with the hashed password in db
 userSchema.methods.isPasswordCorrect = async function (password){ // here we are using method instead of a variable to store it bcz we nedd this keyword
     return await bcrypt.compare(password,this.password) // returns a boolean value
-}
+} // password is used to check at that time only cannot be saved in server, so has to check again and again
 
-userSchema.methods.generateAcessToken = function () {
-    jwt.sign(
+userSchema.methods.generateAccessToken = function () {  //we are using jwt bcz we want don't want the user to login again and again, this stores it in the local storage of the browser, so that the user can stay logged in for a certain period of time
+    return jwt.sign(
         {
             _id: this._id,
             email: this.email,
             username: this.username,
             fullname: this.fullname
-        },
-        process.env.ACCESS_TOKEN_SECRET,
+        },  // payload
+        process.env.ACCESS_TOKEN_SECRET, // secret key
         {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY // expiry time
         }
 )
 }
-userSchema.methods.generateRefreshToken = function () {
-    jwt.sign(
+
+userSchema.methods.generateRefreshToken = function () { // we use refresh token to store it for long time, so it asks to login again after the access token expires, take the example of the typing website where it asks to login again after some time
+    return jwt.sign(
         {
             _id: this._id,
         },
