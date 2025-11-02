@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import { registerUser, testCloudinaryUpload } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
@@ -16,6 +16,12 @@ router.route("/register").post(
         }
     ]), // here upload.fields is a middleWare
     registerUser
+);
+
+// Test route for debugging Cloudinary
+router.route("/test-cloudinary").post(
+    upload.single("testFile"),
+    testCloudinaryUpload
 );
 
 export default router;

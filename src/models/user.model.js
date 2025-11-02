@@ -1,6 +1,6 @@
 import mongoose,{Schema} from "mongoose";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import jwt from "json-web-token";
+import bcrypt from "bcrypt";
 
 export const userSchema = new mongoose.Schema
 (
@@ -20,7 +20,7 @@ export const userSchema = new mongoose.Schema
             lowercase: true,
             trim: true,
         },
-        fullname: {
+        fullName: {
             type: String,
             required: true,
             trim: true,
@@ -63,13 +63,13 @@ userSchema.methods.isPasswordCorrect = async function (password){ // here we are
     return await bcrypt.compare(password,this.password) // returns a boolean value
 } // password is used to check at that time only cannot be saved in server, so has to check again and again
 
-userSchema.methods.generateAccessToken = function () {  //we are using jwt bcz we want don't want the user to login again and again, this stores it in the local storage of the browser, so that the user can stay logged in for a certain period of time
+userSchema.methods.generateAccessToken = function () {  //we are using jwt bcz we don't want the user to login again and again, this stores it in the local storage of the browser, so that the user can stay logged in for a certain period of time
     return jwt.sign(
         {
             _id: this._id,
             email: this.email,
             username: this.username,
-            fullname: this.fullname
+            fullName: this.fullName
         },  // payload
         process.env.ACCESS_TOKEN_SECRET, // secret key
         {
