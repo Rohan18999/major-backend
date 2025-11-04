@@ -59,7 +59,7 @@ userSchema.pre("save",  async function (next) {
 })
 
 // middleware to compare the password with the hashed password in db
-userSchema.methods.isPasswordCorrect = async function (password){ // here we are using method instead of a variable to store it bcz we nedd this keyword
+userSchema.methods.isPasswordCorrect = async function (password){ // here we are using method instead of a variable to store it bcz we need this keyword
     return await bcrypt.compare(password,this.password) // returns a boolean value
 } // password is used to check at that time only cannot be saved in server, so has to check again and again
 
