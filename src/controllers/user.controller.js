@@ -13,7 +13,7 @@ const generateAcessAndRefreshTokens = async(userId) => {
         const refreshToken = user.generateRefreshToken()
 
         user.refreshToken = refreshToken
-        await user.save(validateBeforeSave = false)
+        await user.save({ validateBeforeSave: false })
 
         return { accessToken, refreshToken }
 
@@ -123,14 +123,16 @@ const loginUser = asyncHandler(async(req,res) => {
     // send cookie
     
     const { username,email,password } = req.body;
+    //console.log("Login Request Body:", req.body);
 
-    if (!username || !email){
+    if (!username && !email){
         throw new ApiError(400,"username or email is required")
     }
     
     const user = await User.findOne({
         $or: [{ username }, { email }]
     })
+    //console.log("Found User:", user);
 
     if(!user){
         throw new ApiError(400,"User does not exist")
